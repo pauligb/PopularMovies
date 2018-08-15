@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.example.android.popularmovies.Utilities.JsonUtils;
 import com.example.android.popularmovies.Utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 public class BillboardActivity extends AppCompatActivity {
     private static final String TAG = NetworkUtils.class.getSimpleName();
@@ -57,8 +59,16 @@ public class BillboardActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String movies) {
-            Log.v(TAG, movies);
+        protected void onPostExecute(String popularMoviesPageJson) {
+            Log.v(TAG, popularMoviesPageJson);
+
+            ArrayList<MovieInfo> movieInfoArrayList =
+                    JsonUtils.parsePopularMoviesPageJson(popularMoviesPageJson);
+
+            for(MovieInfo movieInfo : movieInfoArrayList) {
+                Log.v(TAG, "Movie tile: " + movieInfo.title);
+                Log.v(TAG, "Movie posterPath: " + movieInfo.posterPath);
+            }
         }
     }
 }
