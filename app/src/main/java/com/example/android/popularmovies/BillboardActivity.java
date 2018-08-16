@@ -78,11 +78,6 @@ public class BillboardActivity extends AppCompatActivity {
 
             ArrayList<MovieInfo> movieInfoArrayList =
                     JsonUtils.parsePopularMoviesPageJson(popularMoviesPageJson);
-            for(MovieInfo movieInfo : movieInfoArrayList) {
-                Log.v(TAG, "Movie tile: " + movieInfo.title);
-                Log.v(TAG, "Movie posterPath: " + movieInfo.posterPath);
-            }
-
             movieInfoAdapter = new MovieInfoAdapter(BillboardActivity.mainActivity, movieInfoArrayList);
             moviesListView.setAdapter(movieInfoAdapter);
         }
