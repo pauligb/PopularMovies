@@ -2,11 +2,14 @@ package com.example.android.popularmovies;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -74,12 +77,22 @@ public class BillboardActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String popularMoviesPageJson) {
-            Log.v(TAG, popularMoviesPageJson);
-
             ArrayList<MovieInfo> movieInfoArrayList =
                     JsonUtils.parsePopularMoviesPageJson(popularMoviesPageJson);
             movieInfoAdapter = new MovieInfoAdapter(BillboardActivity.mainActivity, movieInfoArrayList);
             moviesListView.setAdapter(movieInfoAdapter);
+            moviesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    launchDetailMovieActivity(position);
+                }
+            });
         }
+    }
+
+    private void launchDetailMovieActivity(int position) {
+        Log.v(TAG, "Position: " + position);
+        Intent intent = new Intent(this, DetailMovieActivity.class);
+        startActivity(intent);
     }
 }
