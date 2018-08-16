@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -55,6 +57,27 @@ public class BillboardActivity extends AppCompatActivity {
             // TODO: Print a message that there is no internet connection or do something else.
             Log.v(TAG, "No Network connection.");
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.billboard_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_popular_movies:
+                new FetchBillboardInformationTask().execute();
+                break;
+            case R.id.action_top_rated:
+                new FetchBillboardInformationTask().execute();
+                break;
+            default:
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public class FetchBillboardInformationTask extends AsyncTask<Void, Void, String> {
