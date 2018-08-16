@@ -31,7 +31,6 @@ public class MovieInfoAdapter extends ArrayAdapter<MovieInfo> {
 
         ImageView iconView = (ImageView) convertView.findViewById(R.id.list_item_image);
         String posterPath = NetworkUtils.buildPosterPath(movieInfo.posterPath);
-        Log.v("AA", "Poster Path: " + posterPath);
         Picasso.with(getContext()).load(posterPath).into(iconView);
 
         TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_title);
