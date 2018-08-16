@@ -12,22 +12,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.example.android.popularmovies.Utilities.JsonUtils;
 import com.example.android.popularmovies.Utilities.NetworkUtils;
-import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BillboardActivity extends AppCompatActivity {
     private static final String TAG = NetworkUtils.class.getSimpleName();
     public static Activity mainActivity;
+
+    final public static int POPULAR_MOVIES_ID = 0;
+    final public static int TOP_RATED_MOVIES_ID = 1;
 
     public static ArrayList<MovieInfo> movieInfoArrayList;
     private GridView moviesListView;
@@ -42,6 +40,7 @@ public class BillboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billboard);
+        setTitle("Popular Movies");
 
         moviesListView = findViewById(R.id.billboard_movies_list);
         mainActivity = this;
@@ -52,7 +51,7 @@ public class BillboardActivity extends AppCompatActivity {
         }
 
         if(isNetworkAvailable(getApplicationContext())) {
-            new FetchBillboardInformationTask().execute();
+            new FetchBillboardInformationTask().execute(POPULAR_MOVIES_ID);
         } else {
             // TODO: Print a message that there is no internet connection or do something else.
             Log.v(TAG, "No Network connection.");
@@ -69,10 +68,12 @@ public class BillboardActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_popular_movies:
-                new FetchBillboardInformationTask().execute();
+                setTitle("Popular Movies");
+                new FetchBillboardInformationTask().execute(POPULAR_MOVIES_ID);
                 break;
             case R.id.action_top_rated:
-                new FetchBillboardInformationTask().execute();
+                setTitle("Top Rated Movies");
+                new FetchBillboardInformationTask().execute(TOP_RATED_MOVIES_ID);
                 break;
             default:
         }
@@ -80,17 +81,33 @@ public class BillboardActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchBillboardInformationTask extends AsyncTask<Void, Void, String> {
+    public class FetchBillboardInformationTask extends AsyncTask<Integer, Void, String> {
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(Integer... params) {
+
+            if(params.length == 0) {
+                return null;
+            }
+
             String api_key = getResources().getString(R.string.themoviedb_api_key);
             if(api_key.isEmpty()) {
                 Log.e(TAG, "R.string.themoviedb_api_key does not contain a key.");
                 return null;
             }
 
-            URL url = NetworkUtils.buildUrl(api_key);
+            URL url;
+            switch (params[0]) {
+                case POPULAR_MOVIES_ID:
+                    url = NetworkUtils.buildPopularUrl(api_key);
+                    break;
+                case TOP_RATED_MOVIES_ID:
+                    url = NetworkUtils.buildTopRatedUrl(api_key);
+                    break;
+                default:
+                url = NetworkUtils.buildPopularUrl(api_key);
+            }
+
             try {
                 return NetworkUtils.getResponseFromHttpUrl(url);
             } catch (Exception e) {

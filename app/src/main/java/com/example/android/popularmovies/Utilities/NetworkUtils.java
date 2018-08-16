@@ -20,19 +20,45 @@ public final class NetworkUtils {
 
     final static String MOVIE_PATH = "movie";
     final static String POPULAR_PATH = "popular";
+    final static String TOP_RATED_PATH = "top_rated";
 
     final static String BILLBOARD_IMAGE_SIZE_PATH = "w185";
 
     /**
-     * Builds the URL used to talk to themoviedb APIs.
+     * Builds the Popular URL used to talk to themoviedb APIs.
      *
      * @param apiKey The API key to query to https://www.themoviedb.org.
-     * @return The URL to use to query movies information.
+     * @return The URL to use to query movies information ordered by Popularity.
      */
-    public static URL buildUrl(String apiKey) {
+    public static URL buildPopularUrl(String apiKey) {
         Uri builtUri = Uri.parse(THEMOVIEDB_URL).buildUpon()
                 .appendPath(MOVIE_PATH)
                 .appendPath(POPULAR_PATH)
+                .appendQueryParameter(API_KEY_QUERY , apiKey)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v(TAG, "Built URI " + url);
+        return url;
+    }
+
+
+    /**
+     * Builds the Top Rated URL used to talk to themoviedb APIs.
+     *
+     * @param apiKey The API key to query to https://www.themoviedb.org.
+     * @return The URL to use to query movies information ordered by Top Rated.
+     */
+    public static URL buildTopRatedUrl(String apiKey) {
+        Uri builtUri = Uri.parse(THEMOVIEDB_URL).buildUpon()
+                .appendPath(MOVIE_PATH)
+                .appendPath(TOP_RATED_PATH)
                 .appendQueryParameter(API_KEY_QUERY , apiKey)
                 .build();
 
