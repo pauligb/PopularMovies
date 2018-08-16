@@ -26,6 +26,8 @@ import java.util.Arrays;
 public class BillboardActivity extends AppCompatActivity {
     private static final String TAG = NetworkUtils.class.getSimpleName();
     public static Activity mainActivity;
+
+    public static ArrayList<MovieInfo> movieInfoArrayList;
     private GridView moviesListView;
     private MovieInfoAdapter movieInfoAdapter;
 
@@ -77,7 +79,7 @@ public class BillboardActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String popularMoviesPageJson) {
-            ArrayList<MovieInfo> movieInfoArrayList =
+            movieInfoArrayList =
                     JsonUtils.parsePopularMoviesPageJson(popularMoviesPageJson);
             movieInfoAdapter = new MovieInfoAdapter(BillboardActivity.mainActivity, movieInfoArrayList);
             moviesListView.setAdapter(movieInfoAdapter);
@@ -91,8 +93,8 @@ public class BillboardActivity extends AppCompatActivity {
     }
 
     private void launchDetailMovieActivity(int position) {
-        Log.v(TAG, "Position: " + position);
         Intent intent = new Intent(this, DetailMovieActivity.class);
+        intent.putExtra(DetailMovieActivity.EXTRA_POSITION, position);
         startActivity(intent);
     }
 }
