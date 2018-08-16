@@ -2,7 +2,6 @@ package com.example.android.popularmovies;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,15 +14,11 @@ import android.widget.GridView;
 import com.example.android.popularmovies.Utilities.JsonUtils;
 import com.example.android.popularmovies.Utilities.NetworkUtils;
 
-import java.net.URL;
 import java.util.ArrayList;
 
-public class BillboardActivity extends AppCompatActivity {
+public class BillboardActivity extends AppCompatActivity  implements MoviesInformationAsyncTask.OnTaskCompleted {
     private static final String TAG = NetworkUtils.class.getSimpleName();
     public static Activity mainActivity;
-
-    final public static int POPULAR_MOVIES_ID = 0;
-    final public static int TOP_RATED_MOVIES_ID = 1;
 
     private ArrayList<MovieInfo> movieInfoArrayList;
     private GridView moviesListView;
@@ -38,8 +33,8 @@ public class BillboardActivity extends AppCompatActivity {
         moviesListView = findViewById(R.id.billboard_movies_list);
         mainActivity = this;
 
-        String api_key = getResources().getString(R.string.themoviedb_api_key);
-        if(api_key.isEmpty()) {
+        NetworkUtils.API_KEY = getResources().getString(R.string.themoviedb_api_key);
+        if(NetworkUtils.API_KEY.isEmpty()) {
             Log.e(TAG, "There is no API KEY");
         }
 
@@ -48,7 +43,8 @@ public class BillboardActivity extends AppCompatActivity {
             return;
         }
 
-        new FetchBillboardInformationTask().execute(POPULAR_MOVIES_ID);
+        new MoviesInformationAsyncTask(this)
+                .execute(MoviesInformationAsyncTask.POPULAR_MOVIES_ID);
     }
 
     @Override
@@ -68,67 +64,18 @@ public class BillboardActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_popular_movies:
                 setTitle("Popular Movies");
-                new FetchBillboardInformationTask().execute(POPULAR_MOVIES_ID);
+                new MoviesInformationAsyncTask(this)
+                        .execute(MoviesInformationAsyncTask.POPULAR_MOVIES_ID);
                 break;
             case R.id.action_top_rated:
                 setTitle("Top Rated Movies");
-                new FetchBillboardInformationTask().execute(TOP_RATED_MOVIES_ID);
+                new MoviesInformationAsyncTask(this)
+                        .execute(MoviesInformationAsyncTask.TOP_RATED_MOVIES_ID);
                 break;
             default:
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public class FetchBillboardInformationTask extends AsyncTask<Integer, Void, String> {
-
-        @Override
-        protected String doInBackground(Integer... params) {
-
-            if(params.length == 0) {
-                return null;
-            }
-
-            String api_key = getResources().getString(R.string.themoviedb_api_key);
-            if(api_key.isEmpty()) {
-                Log.e(TAG, "R.string.themoviedb_api_key does not contain a key.");
-                return null;
-            }
-
-            URL url;
-            switch (params[0]) {
-                case POPULAR_MOVIES_ID:
-                    url = NetworkUtils.buildPopularUrl(api_key);
-                    break;
-                case TOP_RATED_MOVIES_ID:
-                    url = NetworkUtils.buildTopRatedUrl(api_key);
-                    break;
-                default:
-                url = NetworkUtils.buildPopularUrl(api_key);
-            }
-
-            try {
-                return NetworkUtils.getResponseFromHttpUrl(url);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(String popularMoviesPageJson) {
-            movieInfoArrayList =
-                    JsonUtils.parsePopularMoviesPageJson(popularMoviesPageJson);
-            movieInfoAdapter = new MovieInfoAdapter(BillboardActivity.mainActivity, movieInfoArrayList);
-            moviesListView.setAdapter(movieInfoAdapter);
-            moviesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    launchDetailMovieActivity(position);
-                }
-            });
-        }
     }
 
     private void launchDetailMovieActivity(int position) {
@@ -137,5 +84,20 @@ public class BillboardActivity extends AppCompatActivity {
         // This is valid since MovieInfo is Parcelable
         intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, movieInfo);
         startActivity(intent);
+    }
+
+    // This comes from the MoviesInformationAsyncTask.OnTaskCompleted
+    @Override
+    public void onTaskCompleted(String popularMoviesPageJson) {
+        movieInfoArrayList =
+                JsonUtils.parsePopularMoviesPageJson(popularMoviesPageJson);
+        movieInfoAdapter = new MovieInfoAdapter(BillboardActivity.mainActivity, movieInfoArrayList);
+        moviesListView.setAdapter(movieInfoAdapter);
+        moviesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                launchDetailMovieActivity(position);
+            }
+        });
     }
 }

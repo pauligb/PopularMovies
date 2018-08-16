@@ -16,6 +16,7 @@ public final class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     final static String API_KEY_QUERY = "api_key";
+    public static String API_KEY = "";
 
     private static final String THEMOVIEDB_URL = "http://api.themoviedb.org/3/";
     private static final String THEMOVIEDB_IMAGES_URL = "http://image.tmdb.org/t/p/";
