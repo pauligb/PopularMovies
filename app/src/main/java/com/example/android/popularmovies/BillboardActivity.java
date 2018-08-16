@@ -1,9 +1,7 @@
 package com.example.android.popularmovies;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,11 +29,6 @@ public class BillboardActivity extends AppCompatActivity {
     private GridView moviesListView;
     private MovieInfoAdapter movieInfoAdapter;
 
-    public boolean isNetworkAvailable(Context context) {
-        final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
-        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,12 +43,12 @@ public class BillboardActivity extends AppCompatActivity {
             Log.e(TAG, "There is no API KEY");
         }
 
-        if(isNetworkAvailable(getApplicationContext())) {
-            new FetchBillboardInformationTask().execute(POPULAR_MOVIES_ID);
-        } else {
-            // TODO: Print a message that there is no internet connection or do something else.
+        if(!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
             Log.v(TAG, "No Network connection.");
+            return;
         }
+
+        new FetchBillboardInformationTask().execute(POPULAR_MOVIES_ID);
     }
 
     @Override
@@ -66,6 +59,12 @@ public class BillboardActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+            // TODO: Print a message that there is no internet connection or do something else.
+            Log.v(TAG, "No Network connection.");
+            return true;
+        }
+
         switch (item.getItemId()) {
             case R.id.action_popular_movies:
                 setTitle("Popular Movies");

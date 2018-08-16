@@ -3,15 +3,12 @@ package com.example.android.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.popularmovies.Utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 public class DetailMovieActivity extends AppCompatActivity {
     private static final String LOG_TAG = MovieInfoAdapter.class.getSimpleName();

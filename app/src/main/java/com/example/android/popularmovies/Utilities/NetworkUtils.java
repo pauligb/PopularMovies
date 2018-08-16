@@ -1,5 +1,7 @@
 package com.example.android.popularmovies.Utilities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.util.Log;
 
@@ -23,6 +25,12 @@ public final class NetworkUtils {
     final static String TOP_RATED_PATH = "top_rated";
 
     final static String BILLBOARD_IMAGE_SIZE_PATH = "w185";
+
+
+    public static boolean isNetworkAvailable(Context context) {
+        final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
+    }
 
     /**
      * Builds the Popular URL used to talk to themoviedb APIs.

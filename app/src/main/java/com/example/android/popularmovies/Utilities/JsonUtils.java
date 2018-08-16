@@ -13,20 +13,22 @@ import java.util.ArrayList;
 public class JsonUtils {
 
     private static MovieInfo parseMovieInfoJObject(JSONObject jObject) {
-        String originalTitle;
-        String title;
-        String posterPath;
-        String synopsis; // Overview in themoviedb and Synopsis for Udacity project
-        String userRating; // Vote Average in themoviedb and User rating for Udacity project
-        String releaseDate;
+        String originalTitle = "";
+        String title = "";
+        String posterPath = "";
+        String synopsis = ""; // Overview in themoviedb and Synopsis for Udacity project
+        String userRating = ""; // Vote Average in themoviedb and User rating for Udacity project
+        String releaseDate = "";
 
         try {
-            originalTitle = jObject.getString("original_title");
-            title = jObject.getString("title");
-            posterPath = jObject.getString("poster_path");
-            synopsis = jObject.getString("overview");
-            userRating = jObject.getString("vote_average");
-            releaseDate = jObject.getString("release_date");
+            if(jObject != null) {
+                originalTitle = jObject.getString("original_title");
+                title = jObject.getString("title");
+                posterPath = jObject.getString("poster_path");
+                synopsis = jObject.getString("overview");
+                userRating = jObject.getString("vote_average");
+                releaseDate = jObject.getString("release_date");
+            }
         }catch (JSONException e) {
             throw new RuntimeException(e);
         }
