@@ -13,11 +13,15 @@ import java.util.Scanner;
 public final class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
+    final static String API_KEY_QUERY = "api_key";
+
     private static final String THEMOVIEDB_URL = "http://api.themoviedb.org/3/";
+    private static final String THEMOVIEDB_IMAGES_URL = "http://image.tmdb.org/t/p/";
+
     final static String MOVIE_PATH = "movie";
     final static String POPULAR_PATH = "popular";
 
-    final static String API_KEY_QUERY = "api_key";
+    final static String BILLBOARD_IMAGE_SIZE_PATH = "w185";
 
     /**
      * Builds the URL used to talk to themoviedb APIs.
@@ -41,6 +45,19 @@ public final class NetworkUtils {
 
         Log.v(TAG, "Built URI " + url);
         return url;
+    }
+
+    /**
+     * Builds the String Uri used to fetch the movies poster images.
+     *
+     * @param posterName Name of the poster image.
+     * @return The String Uri from the selected movie poster.
+     */
+    public static String buildPosterPath(String posterName) {
+        Uri builtUri = Uri.parse(THEMOVIEDB_IMAGES_URL).buildUpon()
+                .appendPath(BILLBOARD_IMAGE_SIZE_PATH)
+                .build();
+        return builtUri.toString() + posterName;
     }
 
     /**

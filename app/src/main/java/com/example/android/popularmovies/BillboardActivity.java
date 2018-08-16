@@ -43,7 +43,7 @@ public class BillboardActivity extends AppCompatActivity {
         if(api_key.isEmpty()) {
             Log.e(TAG, "There is no API KEY");
         }
-        
+
         if(isNetworkAvailable(getApplicationContext())) {
             new FetchBillboardInformationTask().execute();
         } else {

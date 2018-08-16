@@ -1,6 +1,7 @@
 package com.example.android.popularmovies;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.popularmovies.Utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -28,7 +30,9 @@ public class MovieInfoAdapter extends ArrayAdapter<MovieInfo> {
         }
 
         ImageView iconView = (ImageView) convertView.findViewById(R.id.list_item_image);
-        Picasso.with(getContext()).load("http://i.imgur.com/DvpvklR.png").into(iconView);
+        String posterPath = NetworkUtils.buildPosterPath(movieInfo.posterPath);
+        Log.v("AA", "Poster Path: " + posterPath);
+        Picasso.with(getContext()).load(posterPath).into(iconView);
 
         TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_title);
         titleTextView.setText(movieInfo.title);
