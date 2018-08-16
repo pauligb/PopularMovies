@@ -29,11 +29,11 @@ public class MovieInfoAdapter extends ArrayAdapter<MovieInfo> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_billboard_movie, parent, false);
         }
 
-        ImageView iconView = (ImageView) convertView.findViewById(R.id.list_item_image);
+        ImageView iconView = convertView.findViewById(R.id.list_item_image);
         String posterPath = NetworkUtils.buildPosterPath(movieInfo.posterPath);
         Picasso.with(getContext()).load(posterPath).into(iconView);
 
-        TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_title);
+        TextView titleTextView = convertView.findViewById(R.id.list_item_title);
         titleTextView.setText(movieInfo.title);
 
         return convertView;

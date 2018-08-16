@@ -30,10 +30,10 @@ public class DetailMovieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_movie);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        posterImageView = (ImageView) findViewById(R.id.movie_poster);
-        userRateTextView = (TextView) findViewById(R.id.movie_user_rating);
-        releaseDateTextView = (TextView) findViewById(R.id.movie_release_date);
-        synopsisTextView = (TextView) findViewById(R.id.movie_synopsis);
+        posterImageView = findViewById(R.id.movie_poster);
+        userRateTextView = findViewById(R.id.movie_user_rating);
+        releaseDateTextView = findViewById(R.id.movie_release_date);
+        synopsisTextView = findViewById(R.id.movie_synopsis);
 
         Intent intent = getIntent();
         if (intent == null) {
