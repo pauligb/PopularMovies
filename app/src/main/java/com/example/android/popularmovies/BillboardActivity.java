@@ -25,7 +25,7 @@ public class BillboardActivity extends AppCompatActivity {
     final public static int POPULAR_MOVIES_ID = 0;
     final public static int TOP_RATED_MOVIES_ID = 1;
 
-    public static ArrayList<MovieInfo> movieInfoArrayList;
+    private ArrayList<MovieInfo> movieInfoArrayList;
     private GridView moviesListView;
     private MovieInfoAdapter movieInfoAdapter;
 
@@ -133,7 +133,9 @@ public class BillboardActivity extends AppCompatActivity {
 
     private void launchDetailMovieActivity(int position) {
         Intent intent = new Intent(this, DetailMovieActivity.class);
-        intent.putExtra(DetailMovieActivity.EXTRA_POSITION, position);
+        MovieInfo movieInfo = movieInfoArrayList.get(position);
+        // This is valid since MovieInfo is Parcelable
+        intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, movieInfo);
         startActivity(intent);
     }
 }

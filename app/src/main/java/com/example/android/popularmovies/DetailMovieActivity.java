@@ -13,8 +13,7 @@ import com.squareup.picasso.Picasso;
 public class DetailMovieActivity extends AppCompatActivity {
     private static final String LOG_TAG = MovieInfoAdapter.class.getSimpleName();
 
-    public static final String EXTRA_POSITION = "extra_position";
-    private static final int DEFAULT_POSITION = -1;
+    public static final String EXTRA_MOVIE = "EXTRA_MOVIE";
 
     private ImageView posterImageView;
     private TextView userRateTextView;
@@ -37,14 +36,12 @@ public class DetailMovieActivity extends AppCompatActivity {
             closeOnError();
         }
 
-        int position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
-        if (position == DEFAULT_POSITION) {
-            // EXTRA_POSITION not found in intent
+        MovieInfo movieInfo = (MovieInfo) getIntent().getParcelableExtra(EXTRA_MOVIE);
+        if (movieInfo  == null) {
+            // EXTRA_MOVIE not found in intent
             closeOnError();
             return;
         }
-
-        MovieInfo movieInfo = BillboardActivity.movieInfoArrayList.get(position);
         setTitle(movieInfo.originalTitle);
 
         String posterPath = NetworkUtils.buildPosterPath(movieInfo.posterPath);
