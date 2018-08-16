@@ -1,12 +1,16 @@
 package com.example.android.popularmovies;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.example.android.popularmovies.Utilities.JsonUtils;
 import com.example.android.popularmovies.Utilities.NetworkUtils;
@@ -14,9 +18,13 @@ import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BillboardActivity extends AppCompatActivity {
     private static final String TAG = NetworkUtils.class.getSimpleName();
+    public static Activity mainActivity;
+    private GridView moviesListView;
+    private MovieInfoAdapter movieInfoAdapter;
 
     public boolean isNetworkAvailable(Context context) {
         final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
@@ -28,9 +36,15 @@ public class BillboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billboard);
 
+        moviesListView = findViewById(R.id.billboard_movies_list);
+        mainActivity = this;
+
+        String api_key = getResources().getString(R.string.themoviedb_api_key);
+        if(api_key.isEmpty()) {
+            Log.e(TAG, "There is no API KEY");
+        }
+        
         if(isNetworkAvailable(getApplicationContext())) {
-            ImageView listItemImageView = (ImageView) findViewById(R.id.list_item_image);
-            Picasso.with(this).load("http://i.imgur.com/DvpvklR.png").into(listItemImageView);
             new FetchBillboardInformationTask().execute();
         } else {
             // TODO: Print a message that there is no internet connection or do something else.
@@ -64,11 +78,13 @@ public class BillboardActivity extends AppCompatActivity {
 
             ArrayList<MovieInfo> movieInfoArrayList =
                     JsonUtils.parsePopularMoviesPageJson(popularMoviesPageJson);
-
             for(MovieInfo movieInfo : movieInfoArrayList) {
                 Log.v(TAG, "Movie tile: " + movieInfo.title);
                 Log.v(TAG, "Movie posterPath: " + movieInfo.posterPath);
             }
+
+            movieInfoAdapter = new MovieInfoAdapter(BillboardActivity.mainActivity, movieInfoArrayList);
+            moviesListView.setAdapter(movieInfoAdapter);
         }
     }
 }
